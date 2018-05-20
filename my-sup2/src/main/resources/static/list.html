@@ -34,6 +34,7 @@
 		<table class="table table-condensed">			
 			<thead>
 				<tr>
+					<th>사용자 아이디</th>
 					<th>사용자 이메일</th>	
 					<th>이름 </th>
 				</tr>
@@ -41,7 +42,8 @@
 			<tbody>
 				{{#users}}
 				<tr>
-					<th scope="row">{{email}}</th>
+					<th scope="row">{{userId}}</th>
+					<th>{{email}}</th>
 					<th>{{name}}</th>
 				</tr>
 				{{/users}}
