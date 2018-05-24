@@ -3,6 +3,8 @@ package net.sup2.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +57,29 @@ public class UserController {
 		user.update(updateUser);
 		userRepository.save(user);
 		return "redirect:/users";
+	}
+	
+	@GetMapping("/loginform")
+	public String loginform() {
+		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(String userId,String password, HttpSession session) {
+		//interface의 기능을 선언하여 사용.
+		User user = userRepository.findByUserId(userId);
+		if(user == null) {
+			System.out.println("Login fail not exist id");
+			return "redirect:/users/loginform";		
+		}
+		if(!password.equals(user.getPassword())) {
+			System.out.println("Login fail wrong password");
+			return "redirect:/users/loginform";
+		} 
+		
+		session.setAttribute("user", user);
+		System.out.println("Login success");
+		return "redirect:/";
 	}
 }
 
