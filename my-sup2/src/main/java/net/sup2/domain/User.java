@@ -1,5 +1,7 @@
 package net.sup2.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +17,10 @@ public class User {
 	
 	@Column(nullable=false, length=20, unique=true)
 	private String userId;
-	
 	private String email;
 	private String name;
 	private String password;
+	
 	
 	public long getId() {
 		return id;

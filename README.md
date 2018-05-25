@@ -103,3 +103,24 @@
     - Question class 
     - QuestionRepository interface (만든 후 Controller에 @Autowired를 선언한 repository 선언)
     - Question Controller (`@RequestMapping`등을 구현해야함.)
+
+#### 반복주기 5
+
+- 각 객체의 관계 매핑 (회원과 질문간의) 설정
+
+  - 루비에서도 해봤지만 @ManyToOne , @ManyToMany등 여러가지 애노테이션을 활용하여 관계 매핑이 가능
+
+- 날짜 형식 format 및 getter 사용
+
+  ```java
+  public String getFormattedCreateDate() {
+  		if(createDate == null) {			
+  			return "";
+  		}		
+  		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+  	}
+  ```
+
+  - `index.html` 에서 `{{formattedCreateDate}}`로 가져 올수 있음 jsp에서도 사용 가능한 기능
+    - Java에서의 getter를 쓰지 않아도 가져올 수 있는 기능이므로 !!!꿀팁!!! 알아두자!
+  - 

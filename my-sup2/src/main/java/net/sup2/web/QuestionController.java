@@ -39,20 +39,19 @@ public class QuestionController {
 		
 		User sessioneduser = HttpSessionUtils.getUserFromSession(session);
 	
-		Question newquestion = new Question(sessioneduser.getUserId(), title, contents);
+		Question newquestion = new Question(sessioneduser, title, contents);
 		questionRepository.save(newquestion);
 		
 		return "redirect:/";
 	}
 	
-	@GetMapping("")
-	public String viewQuestion(@PathVariable Long Id,Model model,HttpSession session) {
+	@GetMapping("/{id}")
+	public String viewQuestion(@PathVariable Long id,Model model,HttpSession session) {
 		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "/users/loginform";
 		}
-		Question question = questionRepository.getOne(Id);
-		model.addAttribute("question",question);
-		return "";
+		model.addAttribute("question",questionRepository.findById(id).get());
+		return "/qna/show";
 		
 	}
 }
