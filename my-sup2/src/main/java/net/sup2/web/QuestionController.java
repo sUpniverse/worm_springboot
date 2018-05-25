@@ -41,6 +41,5 @@ public class QuestionController {
 		questionRepository.save(newquestion);
 		
 		return "redirect:/";
-	}
-	
+	}	
 }
