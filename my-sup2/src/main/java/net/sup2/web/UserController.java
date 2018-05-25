@@ -46,13 +46,32 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}/form")
-	public String update_form(@PathVariable Long id, Model model) {
+	public String update_form(@PathVariable Long id, Model model, HttpSession session) {
+		Object tempUser = session.getAttribute("sessionedUser");
+		if(tempUser == null) {
+			return "redirect:/users/loginform";
+		} 
+		
+		User sessionedUser = (User)tempUser;
+		if(!id.equals(sessionedUser.getId())) {
+			throw new IllegalStateException("It is a Illegal access");
+		}		
 		model.addAttribute("user",userRepository.findById(id).get());
 		return "/user/updateform";		
 	}
 	
 	@PutMapping("/{id}")
-	public String update(@PathVariable Long id, User updateUser) {
+	public String update(@PathVariable Long id, User updateUser, HttpSession session) {
+		Object tempUser = session.getAttribute("sessionedUser");
+		if(tempUser == null) {
+			return "redirect:/users/loginform";
+		} 
+		
+		User sessionedUser = (User)tempUser;
+		if(!id.equals(sessionedUser.getId())) {
+			throw new IllegalStateException("It is a Illegal access");
+		}		
+		
 		User user = userRepository.findById(id).get();
 		user.update(updateUser);
 		userRepository.save(user);
@@ -66,7 +85,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public String login(String userId,String password, HttpSession session) {
-		//interface의 기능을 선언하여 사용.
+		//interface에 finbyUserId를 선언하여 사용.
 		User user = userRepository.findByUserId(userId);
 		if(user == null) {
 			System.out.println("Login fail not exist id");
@@ -77,16 +96,17 @@ public class UserController {
 			return "redirect:/users/loginform";
 		} 
 		
-		session.setAttribute("user", user);
+		session.setAttribute("sessionedUser", user);
 		System.out.println("Login success");
 		return "redirect:/";
 	}
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("user");
+		session.removeAttribute("sessionedUser");
 		
 		return "redirect:/";
 	}
+
 }
 
