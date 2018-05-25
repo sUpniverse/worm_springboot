@@ -47,13 +47,13 @@ public class UserController {
 	
 	@GetMapping("/{id}/form")
 	public String update_form(@PathVariable Long id, Model model, HttpSession session) {
-		Object tempUser = session.getAttribute("sessionedUser");
-		if(tempUser == null) {
+		
+		if(HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginform";
 		} 
 		
-		User sessionedUser = (User)tempUser;
-		if(!id.equals(sessionedUser.getId())) {
+		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
+		if(!sessionedUser.matchId(id)) {
 			throw new IllegalStateException("It is a Illegal access");
 		}		
 		model.addAttribute("user",userRepository.findById(id).get());
@@ -62,13 +62,12 @@ public class UserController {
 	
 	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, User updateUser, HttpSession session) {
-		Object tempUser = session.getAttribute("sessionedUser");
-		if(tempUser == null) {
+		if(HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginform";
 		} 
 		
-		User sessionedUser = (User)tempUser;
-		if(!id.equals(sessionedUser.getId())) {
+		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
+		if(!sessionedUser.matchId(id)) {
 			throw new IllegalStateException("It is a Illegal access");
 		}		
 		
@@ -91,7 +90,7 @@ public class UserController {
 			System.out.println("Login fail not exist id");
 			return "redirect:/users/loginform";		
 		}
-		if(!password.equals(user.getPassword())) {
+		if(!user.matchPassword(password)) {
 			System.out.println("Login fail wrong password");
 			return "redirect:/users/loginform";
 		} 

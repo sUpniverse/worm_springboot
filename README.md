@@ -88,3 +88,11 @@
 
   - session에서 `.removeAttribue("user")를 이용해서 지워주면 끝`	
   - 간단하게 get으로 구현했지만 원래는 post로 구현한다.
+
+- Refactoring 
+
+  - session을 통한 User 의 확인 부분을 `sessionUtils.Class`를 이용하여 정의하여 가자뎌가 사용
+    - 현재 사용자의 확인을 통해 불법적인 접근을 하는 경우의 throw 부분도 구현해보기
+  - `User.getpassword`를 직접 사용하는것이 아니라 `User.matchpassword` 를 통해 간접적으로 비밀번호 확인
+    - 뿐만 아니라 getId()등도 마찬가지 `.matchId()` 등과 같이 고친다.
+    - 이렇게 User객체등을 생성했다면 데이터만 가져와서 담아놓는것이 아니라 객체를 활용한 방법들을 생각해본다.

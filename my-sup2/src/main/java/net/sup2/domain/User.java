@@ -48,10 +48,6 @@ public class User {
 		this.name = name;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -67,5 +63,20 @@ public class User {
 		this.email = user.email;		
 	}	
 	
+	public boolean matchPassword(String checkPassword) {
+		if(checkPassword == null) {
+			return false;
+		}
+		
+		return checkPassword.equals(password);
+	}
+	
+	public boolean matchId(Long checkId) {
+		if(checkId == null) {
+			return false;
+		}
+		
+		return checkId.equals(id);
+	}
 
 }
