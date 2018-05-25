@@ -96,3 +96,10 @@
   - `User.getpassword`를 직접 사용하는것이 아니라 `User.matchpassword` 를 통해 간접적으로 비밀번호 확인
     - 뿐만 아니라 getId()등도 마찬가지 `.matchId()` 등과 같이 고친다.
     - 이렇게 User객체등을 생성했다면 데이터만 가져와서 담아놓는것이 아니라 객체를 활용한 방법들을 생각해본다.
+
+- 질문하기 기능 구현
+
+  - User를 만들때와 똑같이 Question dto를 구현하도록 한다.
+    - Question class 
+    - QuestionRepository interface (만든 후 Controller에 @Autowired를 선언한 repository 선언)
+    - Question Controller (`@RequestMapping`등을 구현해야함.)
