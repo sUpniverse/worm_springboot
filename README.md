@@ -140,7 +140,7 @@
 
       - mappedBy를 이용하면 replys를 question에 매핑을 알아서 해준다!
 
-  - Exception을 이용한 리팩토링
+  - Exception을 이용한 회원검증 리팩토링
 
     ```java
     private void hasPermission(HttpSession session, Question question) {
@@ -152,8 +152,57 @@
     			throw new IllegalStateException("자신이 쓴 글만 수정,삭제가 가능합니다.");
     		}		
     	}
+    
+    @PutMapping("/{id}")
+    	public String update(@PathVariable Long id,String title, String contents, HttpSession session, Model model) {
+    		try {
+    			Question question = questionRepository.findById(id).get();
+    			hasPermission(session, question);
+    			question.update(title, contents);
+    			questionRepository.save(question);
+    			return "redirect:/questions/{id}";
+    		} catch (IllegalStateException e) {
+    			model.addAttribute("message",e.getMessage());
+    			return "/user/login";
+    		}		
+    	}
     ```
 
-    - 해당 메서드를 선언하여서 모든 권한에 대한 관리를 할 수 있다.
+    - 해당 메서드를 선언하여서 모든 권한에 대한 관리를 할 수 있다. (메서드를 사용하는 방법까지 같이 첨부)
 
-  - 
+  - Exception이 아닌 vaild를 확인하여 회원검증 리팩토링 (Result.class는 첨부 안함)
+
+    ```java
+    private Result valid(HttpSession session, Question question) {
+    		if(!HttpSessionUtils.isLoginUser(session)) {
+    			return Result.fail("로그인이 필요합니다.");
+    		}
+    		User loginUser = HttpSessionUtils.getUserFromSession(session);
+    		if(!question.isSameUser(loginUser)) {
+    			return Result.fail("자신이 쓴 글만 수정,삭제가 가능합니다.");
+    		}
+    		
+    		return Result.OK();		
+    	}	
+    
+    @PutMapping("/{id}")
+    	public String update(@PathVariable Long id,String title, String contents, HttpSession session, Model model) {
+    		
+    		Question question = questionRepository.findById(id).get();
+    		Result result = valid(session, question);
+    		if(!result.isValid()) {
+    			model.addAttribute("errorMessage",result.getErrorMessage());
+    			return "/user/login";
+    		}
+    		
+    		question.update(title, contents);
+    		questionRepository.save(question);
+    		return "redirect:/questions/{id}";
+    			
+    	}
+    ```
+
+    - 위와 아래의 확연한 차이를 볼 수 있다. 
+
+    
+
