@@ -1,3 +1,5 @@
-INSERT into USER(USER_ID, PASSWORD, NAME, EMAIL) values ('sup2','1234','섭섭','kms2234@hanmail.net');	
-INSERT into USER(USER_ID, PASSWORD, NAME, EMAIL) values ('sup22','1234','섭섭22','kms22345@naver.com');	
+INSERT into USER(ID,USER_ID, PASSWORD, NAME, EMAIL) values (1,'sup2','1234','섭섭','kms2234@hanmail.net');	
+INSERT into USER(ID,USER_ID, PASSWORD, NAME, EMAIL) values (2,'sup22','1234','섭섭22','kms22345@naver.com');	
 
+INSERT into QUESTION(ID,WRITER_ID, TITLE, CONTENTS, CREATE_DATE) values(1,1,'테스트1','테스트이다',CURRENT_TIMESTAMP());
+INSERT into QUESTION(ID,WRITER_ID, TITLE, CONTENTS, CREATE_DATE) values(2,2,'테스트2','테스트이다',CURRENT_TIMESTAMP());

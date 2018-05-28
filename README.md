@@ -123,4 +123,37 @@
 
   - `index.html` 에서 `{{formattedCreateDate}}`로 가져 올수 있음 jsp에서도 사용 가능한 기능
     - Java에서의 getter를 쓰지 않아도 가져올 수 있는 기능이므로 !!!꿀팁!!! 알아두자!
+
+- 게시물 보기 기능 구현
+
+- 답변달기
+
+  - Question과의 관계매핑을 이용하여 만들기 (Question은 OnetoMany, Reply는 ManytoOne)
+
+    - 특별히 Question에서 OnetoMany를 구현할때 
+
+      ```java
+      @OneToMany(mappedBy="question")
+      	@OrderBy("id ASC")
+      	private List<Reply> replys;
+      ```
+
+      - mappedBy를 이용하면 replys를 question에 매핑을 알아서 해준다!
+
+  - Exception을 이용한 리팩토링
+
+    ```java
+    private void hasPermission(HttpSession session, Question question) {
+    		if(!HttpSessionUtils.isLoginUser(session)) {
+    			throw new IllegalStateException("로그인이 필요합니다.");
+    		}
+    		User loginUser = HttpSessionUtils.getUserFromSession(session);
+    		if(!question.isSameUser(loginUser)) {
+    			throw new IllegalStateException("자신이 쓴 글만 수정,삭제가 가능합니다.");
+    		}		
+    	}
+    ```
+
+    - 해당 메서드를 선언하여서 모든 권한에 대한 관리를 할 수 있다.
+
   - 
