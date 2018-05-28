@@ -82,4 +82,10 @@ public class Reply {
 				+ ", createDate=" + createDate + "]";
 	}	
 	
+	public boolean isSameUser(User logindUser) {
+		// TODO Auto-generated method stub
+		
+		return this.writer.equals(logindUser);
+	}
+	
 }
