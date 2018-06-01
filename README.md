@@ -7,11 +7,24 @@
 #### 반복주기 3
 
 - H2 database 이용하기
+
+  - Pom.xml로 가서 dependency에 h2 database를 설정해준다. 그 다음 application.properties에 아래를 넣는다
+
+  ```properties
+  spring.datasource.url=jdbc:h2:~/my-sup22;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  spring.datasource.driverClassName=org.h2.Driver
+  spring.datasource.username=sa
+  spring.datasource.password=
+  spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+  ```
+
+  - 위의 properties를 완성해야 데이터 베이스가 생성된다.
   - locallhost:8080/h2-console 로그인하기
 
 - Jpa 설치하기 
 
   - jap란?  java를 이용하여 sql의 접근할때 불편한 점들을 개선한 도구
+    - 역시 pom.xml에 가서 jpa를 추가해준다. (mvnrepository.com에 가서 확인) 
 
 - User dto 를 이용한 data 등록
 
@@ -77,6 +90,12 @@
     	}
     ```
 
+  - mustache를 이용한 세션 아이디를 이용하기 위해선 properties에 문구를 추가해야한다.
+
+    ```properties
+        spring.mustache.expose-session-attributes=true
+    ```
+
 - jpa의 test data 넣기 (회원가입을 계속해야 하는 불편해소)
 
   - Resources/ 하위 파일에 import.sql 파일을 만든다.
@@ -84,17 +103,63 @@
   - Id를 primary key로해서 `@GenerateValue` 를해서 설정했지만 auto가 되지 않을때!
     - `@GeneratedValue(strategy=GenerationType.IDENTITY) ` 를 사용하면 된다.
 
+- 수정하기 기능 구현
+
+  - User class에 update 메소드를 만들어 준다.
+    - findbyId로 받아온 (세션의 유저) 에 그 유저가 새로 수정한 정보를 덮어 씌워야 하기때문에
+
 - 로그아웃 기능 구현 
 
   - session에서 `.removeAttribue("user")를 이용해서 지워주면 끝`	
   - 간단하게 get으로 구현했지만 원래는 post로 구현한다.
 
-- Refactoring 
+- Refactoring (session 정보를 이용하여 사용자 검증)
 
-  - session을 통한 User 의 확인 부분을 `sessionUtils.Class`를 이용하여 정의하여 가자뎌가 사용
+  - session을 통한 User 의 확인 부분을 `sessionUtils.Class`를 이용하여 정의하여 가져다가 사용
+
+    - session을 받아와 login된 유저인지 검증 후,  session상의 User정보를 반환하기 
+
+      ```java
+      /* sessionUtils	.class */
+      public static final String SESSION_USER_KEY = "sessioneduser";
+      	
+      	public static boolean islogedinUser(HttpSession session) {		
+      		if(session == null) {
+      			return false; 
+      		}		
+      		return true;
+      	}	
+      	public static User getSessionUser(HttpSession session) {
+      		if(!islogedinUser(session)) {
+      			return null;
+      		}		
+      		return (User)session.getAttribute(SESSION_USER_KEY);		
+      	}
+      ```
+
+      - session의 등록된 정보는 바뀔 수 있기때문에 상수를 선언하여서 관리한다.
+
     - 현재 사용자의 확인을 통해 불법적인 접근을 하는 경우의 throw 부분도 구현해보기
+
   - `User.getpassword`를 직접 사용하는것이 아니라 `User.matchpassword` 를 통해 간접적으로 비밀번호 확인
-    - 뿐만 아니라 getId()등도 마찬가지 `.matchId()` 등과 같이 고친다.
+
+    ```java
+    /* User.class */
+    public boolean ismatchPassword(String checkedpassword) {
+    		if(checkedpassword == null) {
+    			return false; 
+    		}
+    		return checkedpassword.equals(password);
+    	}
+    	
+    	public boolean ismatchId(Long Id) {
+    		if(Id == null) {
+    			return false; 
+    		}
+    		return Id.equals(id);
+    	}
+    ```
+
     - 이렇게 User객체등을 생성했다면 데이터만 가져와서 담아놓는것이 아니라 객체를 활용한 방법들을 생각해본다.
 
 - 질문하기 기능 구현
