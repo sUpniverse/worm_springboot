@@ -173,9 +173,13 @@
 
 - 각 객체의 관계 매핑 (회원과 질문간의) 설정
 
-  - 루비에서도 해봤지만 @ManyToOne , @ManyToMany등 여러가지 애노테이션을 활용하여 관계 매핑이 가능
+  - 루비에서도 해봤지만 `@ManyToOne` , `@ManyToMany`등 여러가지 애노테이션을 활용하여 관계 매핑이 가능
+    - `ManyToOne` 의 경우oreignKey로 선언한다 `@JoinColum(foreignKey=@ForeignKey(name=""))`
+    - `OnetoMany` 의 경우 @OnetoMany(mappedBy="")를 통해서 여러개를 가지고 있음을 선언
 
 - 날짜 형식 format 및 getter 사용
+
+  - Java 8 부터는 LocalDateTime을 사용한다.
 
   ```java
   public String getFormattedCreateDate() {
@@ -186,6 +190,7 @@
   	}
   ```
 
+  - 아래 return 부분은 잘 외워두면 좋을듯..
   - `index.html` 에서 `{{formattedCreateDate}}`로 가져 올수 있음 jsp에서도 사용 가능한 기능
     - Java에서의 getter를 쓰지 않아도 가져올 수 있는 기능이므로 !!!꿀팁!!! 알아두자!
 
