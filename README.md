@@ -1,10 +1,17 @@
 # worm_springboot
 
-#### 반복주기 2
+- spring boot 와 Jpa를 이용하여 
 
-- 회원가입 기능 구현
+  
 
-#### 반복주기 3
+### 반복주기 2
+
+- 회원가입 기능 구현 , DB없이..
+  - CRUD (어렵지 않다.)
+
+
+
+### 반복주기 3
 
 - H2 database 이용하기
 
@@ -32,8 +39,7 @@
 
   ```Java
   @Entity
-  public class User {
-  	
+  public class User {	
   	@Id
   	@GeneratedValue
   	private long id;
@@ -64,7 +70,9 @@
   {{/user}}
   ```
 
-#### 반복주기 4
+
+
+### 반복주기 4
 
 - 로그인 기능 구현
 
@@ -169,7 +177,9 @@
     - QuestionRepository interface (만든 후 Controller에 @Autowired를 선언한 repository 선언)
     - Question Controller (`@RequestMapping`등을 구현해야함.)
 
-#### 반복주기 5
+
+
+### 반복주기 5
 
 - 각 객체의 관계 매핑 (회원과 질문간의) 설정
 
@@ -274,5 +284,50 @@
 
     - 위와 아래의 확연한 차이를 볼 수 있다. 
 
-    
+      
+
+### 반복주기 6
+
+- JSON API 및 AJAX를 활용해 답변 추가 / 삭제 과정 구현
+
+- 댓글을 가져오기 위해 javascript를 작성한다.
+
+  ```javascript
+  $('.reply-write input[type=submit]').click(addReply);
+  
+  function addReply(e) {	
+  	e.preventDefault();
+  	console.log("눌러져부렀다");
+  	
+  	var queryString = $('.reply-write').serialize();
+  	console.log("query :" + queryString);
+  }
+  ```
+
+- Ajax를 이용해 댓글 달기를 위한 코딩
+
+  ```javascript
+  <!-- action에 담긴 url을 가져온다 -->
+  var url = $('.reply-write').attr('action');
+  console.log("url : " + url);
+  
+  <!-- ajax로 전송 -->
+  $.ajax({
+  	type : 'post',
+  	url : url,
+  	data : queryString,
+  	dataType : 'json',
+  	error : onError,
+  	success : onSuccess		
+  });
+  ```
+
+  - 해당 json형태의 데이터를 받기 위해 Controller에 `@RestController`를 선언해준다.
+  - Json api를 사용할때 url은 앞에 /api/ 를 붙여준다.
+
+- 
+
+​	
+
+
 
