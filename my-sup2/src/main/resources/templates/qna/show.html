@@ -71,13 +71,10 @@
                               <div class="article-util">
                                   <ul class="article-util-list">
                                       <li>
-                                          <a class="link-modify-article" href="/questions/{{id}}/replys/">수정</a>
+                                          <a class="link-modify-article" href="/questions/{{question.id}}/replys/">수정</a>
                                       </li>
-                                      <li>
-                                          <form class="form-delete" action="/questions/{{id}}/replys" method="POST">
-                                              <input type="hidden" name="_method" value="DELETE">
-                                              <button type="submit" class="delete-answer-button">삭제</button>
-                                          </form>
+                                      <li>                                          
+										<a class="link-delete-article" href="/api/questions/{{question.id}}/replys/{{id}}">삭제</a>									  
                                       </li>
                                   </ul>
                               </div>
@@ -116,13 +113,10 @@
 		<div class="article-util">
 		<ul class="article-util-list">
 			<li>
-				<a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
+				<a class="link-modify-article" href="/api/questions/updateAnswer/{3}">수정</a>
 			</li>
 			<li>
-				<form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
-					<input type="hidden" name="_method" value="DELETE">
-                     <button type="submit" class="delete-answer-button">삭제</button>
-				</form>
+				<a class="link-delete-article" href="/api/questions/{3}/replys/{4}">삭제</a>				
 			</li>
 		</ul>
 		</div>

@@ -290,7 +290,7 @@
 
 - JSON API 및 AJAX를 활용해 답변 추가 / 삭제 과정 구현
 
-- 댓글을 가져오기 위해 javascript를 작성한다.
+- 댓글 작성버튼을 누른 후 data를 가져오기 위해 javascript를 작성한다.
 
   ```javascript
   $('.reply-write input[type=submit]').click(addReply);
@@ -320,14 +320,50 @@
   	error : onError,
   	success : onSuccess		
   });
+  
+  <!-- 동작 성공 후 view단에 댓글을 만들어 주기 위한 코드 -->
+  function onSuccess(data, status) {	
+  	console.log(data);	
+  	var replytemplate = $('#replyTemplate').html();
+  	var template = replytemplate.format(data.writer.userId, data.formattedCreateDate, 										  data.contents,data.question.id,data.id);
+  	$('.qna-comment-slipp-articles').prepend(template);	
+  	$('textarea').val("");
+  }
   ```
 
   - 해당 json형태의 데이터를 받기 위해 Controller에 `@RestController`를 선언해준다.
-  - Json api를 사용할때 url은 앞에 /api/ 를 붙여준다.
+  - Json api를 사용할때 url은 앞에 /api/ 를 붙여준다. (이렇게 url 처리를 많이 한다고 한다.)
 
-- 
+- Ajax를 이용한 댓글 삭제
 
-​	
+  ```javascript
+  $('a.link-delete-article').click(deleteReply);	
+  
+  function deleteReply(e){
+  	e.preventDefault();
+  		
+  	var deleteBtn = $(this);
+  	var url = deleteBtn.attr('href');
+  	console.log(url);
+  	
+  	$.ajax({
+  		type : 'delete',
+  		url : url,
+  		dataType : 'json',
+  		error : function(xhr, status) {
+  			console.log("error");					
+  		},
+  		success : function(data, status) {
+  			console.log(data);
+  			if(data.valid) {
+                  <!-- 성공하면 article을 지워준다 -->
+  				deleteBtn.closest("article").remove();
+  			} else {
+  				alert(data.errorMessage);
+  			}
+  		}
+  	});
+  }
+  ```
 
-
-
+  

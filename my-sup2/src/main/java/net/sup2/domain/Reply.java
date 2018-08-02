@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +21,7 @@ public class Reply {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonProperty
-	private Long Id;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_reply_to_question"))
@@ -56,12 +57,17 @@ public class Reply {
 		}		
 		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
 	}
+	
+	public boolean isSameWriter(User loginUser) {	
+		return loginUser.equals(this.writer);
+	}
+	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Id == null) ? 0 : Id.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -74,17 +80,17 @@ public class Reply {
 		if (getClass() != obj.getClass())
 			return false;
 		Reply other = (Reply) obj;
-		if (Id == null) {
-			if (other.Id != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!Id.equals(other.Id))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Reply [Id=" + Id + ", question=" + question + ", writer=" + writer + ", contents=" + contents
+		return "Reply [Id=" + id + ", question=" + question + ", writer=" + writer + ", contents=" + contents
 				+ ", createDate=" + createDate + "]";
 	}	
 	
@@ -93,5 +99,7 @@ public class Reply {
 		
 		return this.writer.equals(logindUser);
 	}
+
+	
 	
 }

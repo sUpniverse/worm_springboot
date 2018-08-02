@@ -18,29 +18,56 @@ function addReply(e) {
 		error : onError,
 		success : onSuccess		
 	});
+}
 	
-	function onError() {
-		
-		
-	}
+function onError() {}
 	
-	function onSuccess(data, status) {
-		console.log(data);		
-		var replytemplate = $('#replyTemplate').html();
-		var template = replytemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.id, data.id);
-		$('.qna-comment-slipp-articles').prepend(template);
-	}
+function onSuccess(data, status) {	
+	console.log(data);	
+	var replytemplate = $('#replyTemplate').html();
+	var template = replytemplate.format(data.writer.userId, data.formattedCreateDate, data.contents,data.question.id,data.id);
+	$('.qna-comment-slipp-articles').prepend(template);	
+	$('textarea').val("");
+}
+		
+
+$('a.link-delete-article').click(deleteReply);	
+
+
+function deleteReply(e){
+	e.preventDefault();
+		
+	var deleteBtn = $(this);
+	var url = deleteBtn.attr('href');
+	console.log(url);
+	
+	$.ajax({
+		type : 'delete',
+		url : url,
+		dataType : 'json',
+		error : function(xhr, status) {
+			console.log("error");					
+		},
+		success : function(data, status) {
+			console.log(data);
+			if(data.valid) {
+				deleteBtn.closest("article").remove();
+			} else {
+				alert(data.errorMessage);
+			}
+		}
+	});
+}
 	
 
-	String.prototype.format = function() {
-	  var args = arguments;
-	  return this.replace(/{(\d+)}/g, function(match, number) {
-	    return typeof args[number] != 'undefined'
-	        ? args[number]
-	        : match
-	        ;
-	  });
-	};
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+  });
+};
 	
 	
-}
