@@ -36,6 +36,7 @@ public class APIReplyController {
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.findById(questionId).get();
 		Reply reply = new Reply(loginUser, question,contents);		
+		question.addReply();
 		
 		return replyRepository.save(reply);
 	}
@@ -53,6 +54,9 @@ public class APIReplyController {
 		}
 		
 		replyRepository.deleteById(id);
+		Question question = questionRepository.findById(questionId).get();
+		question.deleteReply();
+		questionRepository.save(question);
 		return Result.OK();
 	}
 		
