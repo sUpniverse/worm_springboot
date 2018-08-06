@@ -1,5 +1,6 @@
 package net.sup2.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +13,11 @@ import net.sup2.domain.UserRepository;
 @RequestMapping("/api/users")
 public class APIUserController {
 	
+	@Autowired
 	UserRepository userRepository;
 	
 	@GetMapping("/{id}")
-	public User show(@PathVariable Long id) {
+	public User show(@PathVariable Long id) {		
 		return userRepository.findById(id).get();
 	}
 }

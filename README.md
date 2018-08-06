@@ -321,7 +321,7 @@
   	success : onSuccess		
   });
   
-  <!-- 동작 성공 후 view단에 댓글을 만들어 주기 위한 코드 -->
+  <!-- 동작 성공 후 페이지 변화없이 view단에 댓글을 만들어 주기 위한 코드 -->
   function onSuccess(data, status) {	
   	console.log(data);	
   	var replytemplate = $('#replyTemplate').html();
@@ -366,4 +366,94 @@
   }
   ```
 
-  
+- Contoller
+
+  ```java
+  @RestController        //json을 위한 Restcontroller 선언
+  @RequestMapping("/api/questions/{questionId}/replys")
+  public class APIReplyController {
+  	
+  	@Autowired
+  	private replyRepository replyRepository;
+  	
+  	@Autowired
+  	private QuestionRepository questionRepository;	
+  	
+  	@PostMapping("")
+  	public Reply create(@PathVariable Long questionId, String contents, HttpSession session) {
+  		/* User 검증부분 및 getUSer 생략  */
+  		Reply reply = new Reply(loginUser, question,contents);		
+  		question.addReply();		
+  		return replyRepository.save(reply);
+  	}
+  	
+  	@DeleteMapping("/{id}")
+  	public Result delete(@PathVariable Long questionId, @PathVariable Long id, HttpSession session) {
+  		/* User 검증부분 및 getUSer 생략  */
+  		replyRepository.deleteById(id);
+  		Question question = questionRepository.findById(questionId).get();
+  		question.deleteReply();
+  		questionRepository.save(question);
+  		return Result.OK();
+  	}
+  ```
+
+- Swagger를 이용한 API 문서화
+
+  - [REST] API를 그려내는 방식
+
+  - 소스코드내에서 어노테이션을 통해 직접 API 문서화
+
+  - Dependency 추가
+
+    ```xml
+    <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>2.2.2</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.2.2</version>
+                <scope>compile</scope>
+            </dependency>
+    ```
+
+  - Application에 스웨거를 Enable 해준다.
+
+    ```java
+    @SpringBootApplication
+    @EnableSwagger2
+    @ComponentScan("hello")
+    public class Application {
+     public static void main(String[] args) {
+    		SpringApplication.run(MySup2Application.class, args);
+    	}
+    	
+    	@Bean
+    	public Docket newsApi() {
+            return new Docket(DocumentationType.SWAGGER_2)
+                    .groupName("my-sup2")
+                    .apiInfo(apiInfo())
+                    .select()
+                    .paths(PathSelectors.ant("/api/**"))
+                    .build();
+        }
+    	     
+        private ApiInfo apiInfo() {
+            return new ApiInfoBuilder()
+                    .title("My Sup2 API")
+                    .description("My Sup2 API")
+                    .termsOfServiceUrl("http://www-03.ibm.com/software/sla/sladb.nsf/sla/bm?Open")
+                    .contact("Niklas Heidloff")
+                    .license("Apache License Version 2.0")
+                    .licenseUrl("https://github.com/IBM-Bluemix/news-aggregator/blob/master/LICENSE")
+                    .version("2.0")
+                    .build();
+        }
+    
+    ```
+
+    
