@@ -1,8 +1,20 @@
 # worm_springboot
 
-- spring boot 와 Jpa를 이용하여 
+- spring boot 와 Jpa를 이용하여..
 
-  
+
+
+### 반복주기 1
+
+- AWS에 로그인하기 
+
+  ```shell
+  ssh -i **.pem ubuntu@IP_ADDRESS
+  ```
+
+- `IP_ADDRESS:8080` 으로 접속
+
+
 
 ### 반복주기 2
 
@@ -456,4 +468,32 @@
     
     ```
 
-    
+- 쉘 스크립트를 활용한 배포 자동화
+
+  ```shell
+  cho "welcome My Shell"
+  
+  TOMCAT_HOME=~/tomcat
+  
+  cd ~/worm_springboot
+  git pull
+  
+  cd my-sup2
+  
+  ./mvnw clean package
+  
+  cd $TOMCAT_HOME/bin
+  ./shutdown.sh
+  
+  cd $TOMCAT_HOME/webapps
+  rm -rf ROOT
+  
+  mv ~/worm_springboot/my-sup2/target/my-sup2-1.0/ $TOMCAT_HOME/webapps/ROOT/
+  
+  cd $TOMCAT_HOME/bin
+  ./startup.sh
+  
+  tail -500f $TOMCAT_HOME/logs/catalina.out
+  ```
+
+  - AWS 상의 폴더내에 .sh를 만들어서 해당 쉘 스크립트를 주입한다. 
