@@ -27,7 +27,7 @@
 
 - H2 database 이용하기
 
-  - Pom.xml로 가서 dependency에 h2 database를 설정해준다. 그 다음 application.properties에 아래를 넣는다
+- - Pom.xml로 가서 dependency에 h2 database를 설정해준다. 그 다음 application.properties에 아래를 넣는다
 
   ```properties
   spring.datasource.url=jdbc:h2:~/my-sup22;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -44,6 +44,7 @@
 
   - jap란?  java를 이용하여 sql의 접근할때 불편한 점들을 개선한 도구
     - 역시 pom.xml에 가서 jpa를 추가해준다. (mvnrepository.com에 가서 확인) 
+    - Spring Boot Data JPA Starter를 찾으면 OK 
 
 - User dto 를 이용한 data 등록
 
@@ -82,6 +83,13 @@
   {{/user}}
   ```
 
+- Thymeleaf를 이용한 표현식
+
+  ```html
+  <a th:if="${session.user}" th:text="${session.user.name} + 님" th:href="@{'/users/' + ${session.user.id} + '/form'}"></a>
+  
+  <form  th:action="@{'/users/' + ${user.id}}" method="post">
+  ```
 
 
 ### 반복주기 4
@@ -296,7 +304,6 @@
 
     - 위와 아래의 확연한 차이를 볼 수 있다. 
 
-      
 
 ### 반복주기 6
 
